@@ -1,24 +1,12 @@
-#PLEASE MODIFY THE CODE OTHERWISE THERE WILL BE CONTENT VIOLATION
+from bisect import bisect
+
+
 class Solution:
     def answerQueries(self, nums: List[int], queries: List[int]) -> List[int]:
-        self.es = []
-        def printSubsequences(arr, index, subarr):
-            if index == len(arr):
-                if len(subarr) != 0:
-                    self.es.append(subarr)
+        nums.sort()
 
-            else:
-                printSubsequences(arr, index + 1, subarr)
-                printSubsequences(arr, index + 1, 
-                                    subarr+[arr[index]])
+        pref = [0] * (len(nums) + 1)
+        for i, num in enumerate(nums):
+            pref[i + 1] = pref[i] + num
 
-            return
-        printSubsequences(nums, 0, [])
-        result = []
-        for n in queries:
-            temp = 0
-            for num in self.es:
-                if sum(num) <= n:
-                    temp = max(temp, len(num))
-            result.append(temp)
-        return result
+        return [bisect(pref, query) - 1 for query in queries]
